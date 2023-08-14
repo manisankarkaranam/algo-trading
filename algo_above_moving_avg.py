@@ -26,11 +26,11 @@ class AlgoAboveMovingAvg:
         df = df[["Date", "Close"]].dropna()
         return df
 
-    def start_back_testing(self, df, expected_returns, consider_slope=True):
+    def start_back_testing_util(self, df, expected_returns, consider_slope):
         trade_count = 1
         trades_summary = []
         for i in range(1, df.shape[0]):
-            if consider_slope and df.iloc[i]['Slope'] >= self.ROLLING_SLOPE_WINDOW / 2:
+            if consider_slope and df.iloc[i]['Slope'] > 0.8 * self.ROLLING_SLOPE_WINDOW:
                 continue
             # Entering trade if today's price moves above moving average
             if entry_check(df, i):
@@ -59,10 +59,10 @@ class AlgoAboveMovingAvg:
                                            df.iloc[j]['Date'], df.iloc[j]['Close'],
                                            cur_profit_loss, cur_profit_loss_percent, days_in_trade))
                 else:
-                    log.error("Could not exit..")
+                    log.debug("Could not exit..")
         return trades_summary
 
-    def run_algorithm(self):
+    def start_back_testing(self, consider_slope=True):
         trades_summary = []
         try:
             df = self.pre_process_data()
@@ -72,7 +72,7 @@ class AlgoAboveMovingAvg:
                 utils.plot_price_with_moving_avg(df)
 
             df['Slope'] = utils.get_rolling_slope(df['Moving Average'], window=self.ROLLING_SLOPE_WINDOW)
-            trades_summary = self.start_back_testing(df, self.EXPECTED_RETURNS)
+            trades_summary = self.start_back_testing_util(df, self.EXPECTED_RETURNS, consider_slope)
         except:
             log.error(f"Algorithm failed to generate report for {self.stock_code}")
         return trades_summary
@@ -87,7 +87,7 @@ class AlgoAboveMovingAvg:
                  f"Today's Close: {df.iloc[day_index]['Close']}")
         if df.iloc[day_index]['Close'] <= df.iloc[day_index]['Moving Average']:
             log.info(f"Closing Price less than moving average. Keep watching.")
-        if entry_check(df, day_index) and df.iloc[day_index]['Slope'] < self.ROLLING_SLOPE_WINDOW / 2:
+        if entry_check(df, day_index) and df.iloc[day_index]['Slope'] < 0.8 * self.ROLLING_SLOPE_WINDOW:
             log.info(f"Get Ready. {self.stock_code} can be entered.\n")
             return True
         else:

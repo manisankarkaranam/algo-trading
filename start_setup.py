@@ -17,19 +17,23 @@ class StartSetup:
         self.end_date = end_date
         self.cur_date = utils.get_cur_date()
 
+    def download_his_data(self):
+        log.info("Downloading historical data...")
+        download_his_data_obj = DownloadHisData(self.cur_date)
+        download_his_data_obj.download_data()
+
     def start_setup(self, download=True):
         if download:
-            log.info("Downloading data...")
-            download_his_data_obj = DownloadHisData(self.cur_date)
-            download_his_data_obj.download_data()
+            self.download_his_data()
         self.check_for_trades()
 
     def back_test_all_stocks(self):
+        # self.download_his_data()
         back_tested_data = []
         for stock in os.listdir(Config.STOCKS_DOWNLOAD_DIR.format(date=self.cur_date)):
             path = os.path.join(Config.STOCKS_DOWNLOAD_DIR.format(date=self.cur_date), stock)
             algorithm = AlgoAboveMovingAvg(stock.strip(".csv"), path)
-            back_tested_data.extend(algorithm.run_algorithm())
+            back_tested_data.extend(algorithm.start_back_testing())
         back_tested_data_df = pd.DataFrame(back_tested_data, columns = ['Stock', 'Entry', 'Buy', 'Exit', 'Sell',
                                                                         'ProfitLoss', 'Returns', 'DaysInTheTrade'])
         back_tested_data_df = back_tested_data_df[back_tested_data_df['Entry'] > self.start_date]
@@ -49,6 +53,6 @@ class StartSetup:
 
 
 if __name__ == "__main__":
-    setup_obj = StartSetup('2001-01-01', '')
-    setup_obj.start_setup()
-    # setup_obj.iterate_all_stocks()
+    setup_obj = StartSetup('2001-00-00', '')
+    setup_obj.start_setup(True)
+    # setup_obj.back_test_all_stocks()
