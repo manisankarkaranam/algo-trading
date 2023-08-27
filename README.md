@@ -1,12 +1,12 @@
 # Algo-Trading
 
-# 1. CrossMAFromBelow
+# 1. Cross MA From Below
 
   Buy Signal: When stock close price crosses 200D SMA from below and 200D SMA should be in uptrend for last 30 days
   Sell Signal: When EXPECTED_RETURNS are achieved or Days in the trade > MAX_HOLD or cur_profit_loss_percent < MAX_LOSS
 
 
-# 2. BelowMARSI
+# 2. Below MA and RSI
 
   Buy Signal: When stock is trading below 200D SMA and 14D RSI.
   Sell Signal: When EXPECTED_RETURNS are achieved or Days in the trade > MAX_HOLD or cur_profit_loss_percent < MAX_LOSS
