@@ -31,7 +31,7 @@ class DownloadHisData:
 
     def download_data(self):
         self.check_file_present()
-        log.info(f"Saving historical data at: {self.download_dir}")
+        log.debug(f"Saving historical data at: {self.download_dir}\n")
         stock_symbols = pd.read_csv(self.stock_symbols_file_path)
         for stock in tqdm(stock_symbols['Symbol'].to_list()):
             url = Config.HIS_DATA_FETCH_URL.format(stock=stock, epoch=self.cur_epoch, candle_length=self.candle_length)

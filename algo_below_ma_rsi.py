@@ -21,7 +21,7 @@ class BelowMARSI(AlgorithmsBase):
         self.data_path = data_path
 
     def __pre_process_data(self):
-        log.info(f"Reading data from path {self.data_path}")
+        log.debug(f"Reading data from path {self.data_path}")
 
         df = pd.read_csv(self.data_path)
         df = df[["Date", "Close"]].dropna()
@@ -82,4 +82,17 @@ class BelowMARSI(AlgorithmsBase):
         return trades_summary
 
     def check_for_trades(self):
-        pass
+        df = self.__pre_process_data()
+        day_index = df.shape[0] - 1
+        log.debug(f"Checking {self.stock_code}. Today's Close: {df.loc[day_index]['Close']} "
+                  f"SMA: {df.loc[day_index]['sma200']} RSI: {df.loc[day_index]['rsi']}")
+        if df.loc[day_index]['Close'] <= df.loc[day_index]['sma200']:
+            log.info(f"{self.stock_code} Closing Price less than moving average. Keep watching.")
+
+        last_index = df.index[(df['Close'] < df['sma200']) & (df['rsi'] < RSI_BOTTOM_THRESHOLD)].tolist()[-1]
+        if last_index == day_index:
+            log.info(f"Get Ready. {self.stock_code} can be entered.\n")
+            return True
+        else:
+            log.debug(f"Sit Quiet. {self.stock_code} can not be entered.\n")
+            return False

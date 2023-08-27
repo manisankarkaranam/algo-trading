@@ -28,7 +28,7 @@ class CrossMAFromBelow(AlgorithmsBase):
         self.data_path = data_path
 
     def __pre_process_data(self):
-        log.info(f"Reading data from path {self.data_path}")
+        log.debug(f"Reading data from path {self.data_path}")
         df = pd.read_csv(self.data_path)
         df = df[["Date", "Close"]].dropna()
         return df
@@ -89,16 +89,16 @@ class CrossMAFromBelow(AlgorithmsBase):
         df['Moving Average'] = utils.get_moving_average(df['Close'], MOVING_AVERAGE_PERIOD)
         df['Slope'] = utils.get_rolling_slope(df['Moving Average'], window=ROLLING_SLOPE_WINDOW)
         day_index = df.shape[0] - 1
-        log.info(f"Checking {self.stock_code}. Yesterday's Close: {df.iloc[day_index - 1]['Close']}, "
-                 f"Mov Avg: {df.iloc[day_index]['Moving Average']} "
-                 f"Today's Close: {df.iloc[day_index]['Close']}")
+        log.debug(f"Checking {self.stock_code}. Yesterday's Close: {df.iloc[day_index - 1]['Close']}, "
+                  f"Mov Avg: {df.iloc[day_index]['Moving Average']} "
+                  f"Today's Close: {df.iloc[day_index]['Close']}")
         if df.iloc[day_index]['Close'] <= df.iloc[day_index]['Moving Average']:
-            log.info(f"Closing Price less than moving average. Keep watching.")
+            log.info(f"{self.stock_code} Closing Price less than moving average. Keep watching.")
         if entry_check(df, day_index) and df.iloc[day_index]['Slope'] < 0.8 * ROLLING_SLOPE_WINDOW:
             log.info(f"Get Ready. {self.stock_code} can be entered.\n")
             return True
         else:
-            log.info(f"Sit Quiet. {self.stock_code} can not be entered.\n")
+            log.debug(f"Sit Quiet. {self.stock_code} can not be entered.\n")
             return False
 
 # if __name__ == "__main__":
