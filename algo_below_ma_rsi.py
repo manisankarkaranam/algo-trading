@@ -1,5 +1,4 @@
 import pandas as pd
-import utils
 from config import Config
 from datetime import datetime
 import logging as log
@@ -54,7 +53,7 @@ class BelowMARSI(AlgorithmsBase):
                                      datetime.strptime(df.loc[index]['Date'], '%Y-%m-%d')).days
 
                     if (cur_profit_loss_percent > EXPECTED_RETURNS or days_in_trade > MAX_HOLDING_PERIOD or
-                            cur_profit_loss_percent <= -30):
+                            cur_profit_loss_percent <= MAX_LOSS):
                         is_exited = True
                         break
                     next_day += 1
