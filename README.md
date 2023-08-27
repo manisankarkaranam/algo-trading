@@ -9,6 +9,6 @@
 
 # 2. Below MA and RSI
 
-  Buy Signal: When stock is trading below 200D SMA and 14D RSI \n
+  Buy Signal: When stock is trading below 200D SMA and 14D RSI <br />
   Sell Signal: When EXPECTED_RETURNS are achieved or Days in the trade > MAX_HOLD or cur_profit_loss_percent < MAX_LOSS <br />
   PS: Will not enter a trade if already holding the same stock. Eg. Only 1 ASIAN_PAINTS will be traded all the time <br />
