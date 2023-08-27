@@ -7,13 +7,21 @@ import logging as log
 
 
 class DownloadHisData:
-    def __init__(self, date):
+    """
+    date: date till which data should be downloaded
+    stock_symbols_file: File that contains symbols of stocks to be downloaded
+    candle_length: Candle Stick length, day-d, week-wk, month-m
+    """
+
+    def __init__(self, date, stock_symbols_file, candle_length='d'):
         self.cur_epoch = utils.get_cur_epoch()
         self.download_dir = Config.STOCKS_DOWNLOAD_DIR.format(date=date)
+        self.stock_symbols_file_path = Config.STOCK_SYMBOLS_CSV.format(file_name=stock_symbols_file)
+        self.candle_length = candle_length
 
-    def pre_process(self):
-        if not os.path.exists(Config.STOCK_SYMBOLS_CSV):
-            log.error(f"File do not exist {Config.STOCK_SYMBOLS_CSV}\nExiting")
+    def check_file_present(self):
+        if not os.path.exists(self.stock_symbols_file_path):
+            log.error(f"File do not exist {self.stock_symbols_file_path}\nExiting.")
             exit(1)
         if not os.path.exists(Config.STOCKS_HIS_DATA_DIR):
             os.mkdir(Config.STOCKS_HIS_DATA_DIR)
@@ -22,11 +30,11 @@ class DownloadHisData:
             os.mkdir(self.download_dir)
 
     def download_data(self):
-        self.pre_process()
+        self.check_file_present()
         log.info(f"Saving historical data at: {self.download_dir}")
-        stock_symbols = pd.read_csv(Config.STOCK_SYMBOLS_CSV)
+        stock_symbols = pd.read_csv(self.stock_symbols_file_path)
         for stock in tqdm(stock_symbols['Symbol'].to_list()):
-            url = Config.HIS_DATA_FETCH_URL.format(stock=stock, epoch=self.cur_epoch)
+            url = Config.HIS_DATA_FETCH_URL.format(stock=stock, epoch=self.cur_epoch, candle_length=self.candle_length)
             try:
                 save_path = os.path.join(self.download_dir, f"{stock}.csv")
                 utils.download_file(url, save_path)
@@ -34,6 +42,11 @@ class DownloadHisData:
             except:
                 log.error(f"Failed to download {url}")
 
+
 # if __name__ == "__main__":
-#     downloadHisData = DownloadHisData(date=utils.get_cur_date())
+#     log.basicConfig()
+#     log.getLogger().setLevel(log.INFO)
+#
+#     downloadHisData = DownloadHisData(date=utils.get_cur_date(),
+#                                       stock_symbols_file=Config.STOCKS_ALGO_ABOVE_MA_CSV)
 #     downloadHisData.download_data()
