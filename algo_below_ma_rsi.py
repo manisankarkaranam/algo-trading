@@ -27,6 +27,7 @@ class BelowMARSI(AlgorithmsBase):
         df = df[["Date", "Close"]].dropna()
         df['sma200'] = ta.ma("sma", df['Close'], length=MA_PERIOD).tolist()
         df['rsi'] = ta.rsi(df['Close']).tolist()
+        df = df[df['Date'] >= '2011-00-00']
         df = df.dropna().reset_index(drop=True)
         return df
 
@@ -91,8 +92,8 @@ class BelowMARSI(AlgorithmsBase):
 
         last_index = df.index[(df['Close'] < df['sma200']) & (df['rsi'] < RSI_BOTTOM_THRESHOLD)].tolist()[-1]
         if last_index == day_index:
-            log.info(f"Get Ready. {self.stock_code} can be entered.\n")
+            log.info(f"=====> {self.stock_code} can be entered. <=====")
             return True
         else:
-            log.debug(f"Sit Quiet. {self.stock_code} can not be entered.\n")
+            log.debug(f"Sit Quiet. {self.stock_code} can not be entered.")
             return False
