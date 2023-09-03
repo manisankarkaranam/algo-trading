@@ -1,5 +1,4 @@
 import pandas as pd
-import utils
 from config import Config
 from datetime import datetime
 import logging as log
