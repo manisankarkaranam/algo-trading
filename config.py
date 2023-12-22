@@ -27,3 +27,6 @@ class Config:
 
     STOCKS_ALGO_BELOW_MA_RSI = 'stocks-below-ma-rsi.csv'
     TRADES_BELOW_MA_RSI = 'result-below-ma-rsi.csv'
+
+    STOCKS_ALGO_TRACK_LONG_TERM = 'stocks-long-term.csv'
+    TRADES_TRACK_LONG_TERM = 'result-long-term.csv'
