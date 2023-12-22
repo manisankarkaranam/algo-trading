@@ -7,6 +7,7 @@ from config import Config
 from download_his_data import DownloadHisData
 from algo_cross_ma_from_below import CrossMAFromBelow
 from algo_below_ma_rsi import BelowMARSI
+from algo_track_long_term_stocks import TrackLongTermStocks
 
 
 class StartSetup:
@@ -60,7 +61,7 @@ def setup_logger():
     root_logger = log.getLogger()
     root_logger.setLevel(log.DEBUG)
 
-    fh = log.FileHandler('logs.log', mode='w')
+    fh = log.FileHandler(f'logs/{utils.get_cur_date()}.log', mode='w')
     formatter = log.Formatter('%(message)s')
     fh.setFormatter(formatter)
     fh.setLevel(log.DEBUG)
@@ -74,6 +75,7 @@ def setup_logger():
 if __name__ == "__main__":
     setup_logger()
 
+    # """
     # Running CrossMAFromBelow Algorithm
     log.info("##########################################################################")
     log.info("#####                      Cross MA From Below                       #####")
@@ -91,3 +93,11 @@ if __name__ == "__main__":
     setup_algo_below_ma_rsi.init_setup()
     setup_algo_below_ma_rsi.check_for_trades()
     # setup_algo_below_ma_rsi.back_test_all_stocks()
+    # """
+
+    log.info("##########################################################################")
+    log.info("#####                  Track Long Term Stocks                        #####")
+    log.info("##########################################################################")
+    setup_algo_long_term_stocks = StartSetup(TrackLongTermStocks, '2001-00-00')
+    setup_algo_long_term_stocks.init_setup()
+    setup_algo_long_term_stocks.check_for_trades()
