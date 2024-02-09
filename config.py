@@ -30,3 +30,7 @@ class Config:
 
     STOCKS_ALGO_TRACK_LONG_TERM = 'stocks-long-term.csv'
     TRADES_TRACK_LONG_TERM = 'result-long-term.csv'
+
+    # Index Stock Symbols
+    NIFTY_500_STOCKS = "ind_nifty500list.csv"
+    NIFTY_100_STOCKS = "ind_nifty100list.csv"

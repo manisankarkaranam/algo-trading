@@ -48,5 +48,5 @@ class DownloadHisData:
 #     log.getLogger().setLevel(log.INFO)
 #
 #     downloadHisData = DownloadHisData(date=utils.get_cur_date(),
-#                                       stock_symbols_file=Config.STOCKS_ALGO_ABOVE_MA_CSV)
+#                                       stock_symbols_file=Config.NIFTY_500_STOCKS)
 #     downloadHisData.download_data()
